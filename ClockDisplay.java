@@ -11,6 +11,8 @@
  * 
  * @author Michael Kölling and David J. Barnes
  * @version 2011.07.31
+ * 
+ * This modifies the 24-hour clock to keep it as a 24 hour clock, but have a 12 hour display.
  */
 public class ClockDisplay
 {
@@ -78,7 +80,24 @@ public class ClockDisplay
      */
     private void updateDisplay()
     {
-        displayString = hours.getDisplayValue() + ":" + 
-                        minutes.getDisplayValue();
+        int hour = hours.getValue();
+        
+        if(hour == 0){
+            displayString = 12 + ":" + 
+                        minutes.getDisplayValue() + " AM";
+                    }
+          else if (hour < 12){
+              displayString = hour + ":" + 
+                        minutes.getDisplayValue() + " AM";
+            }
+            else if (hour == 12){
+              displayString = hour + ":" + 
+                        minutes.getDisplayValue() + " PM";
+            }
+            
+            else if (hour <= 24){
+              displayString = (hour-12) + ":" + 
+                        minutes.getDisplayValue() + " PM";
+            }
     }
 }
