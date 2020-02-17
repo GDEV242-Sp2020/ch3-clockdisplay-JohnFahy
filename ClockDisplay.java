@@ -1,8 +1,8 @@
 
 /**
- * The ClockDisplay class implements a digital clock display for a
- * European-style 24 hour clock. The clock shows hours and minutes. The 
- * range of the clock is 00:00 (midnight) to 23:59 (one minute before 
+ * This ClockDisplay class implements a digital clock display for a
+ * American-style 12 hour clock. The clock shows hours and minutes. The 
+ * range of the clock is 12:00 AM (midnight) to 11:59 PM (one minute before 
  * midnight).
  * 
  * The clock display receives "ticks" (via the timeTick method) every minute
@@ -11,12 +11,16 @@
  * 
  * @author Michael Kölling and David J. Barnes
  * @version 2011.07.31
+ * 
+ * This is the 12-hour-internal branch
+ * modified by John Patrick Fahy
  */
 public class ClockDisplay
 {
     private NumberDisplay hours;
     private NumberDisplay minutes;
-    private String displayString;    // simulates the actual display
+    private String displayString;
+    private String amPm;// simulates the actual display
     
     /**
      * Constructor for ClockDisplay objects. This constructor 
@@ -24,8 +28,9 @@ public class ClockDisplay
      */
     public ClockDisplay()
     {
-        hours = new NumberDisplay(24);
+        hours = new NumberDisplay(12);
         minutes = new NumberDisplay(60);
+        amPm = "AM";
         updateDisplay();
     }
 
@@ -34,11 +39,12 @@ public class ClockDisplay
      * creates a new clock set at the time specified by the 
      * parameters.
      */
-    public ClockDisplay(int hour, int minute)
+    public ClockDisplay(int hour, int minute, String AMorPM)
     {
-        hours = new NumberDisplay(24);
+        hours = new NumberDisplay(12);
         minutes = new NumberDisplay(60);
-        setTime(hour, minute);
+        amPm = AMorPM;
+       setTime(hour, minute, amPm);
     }
 
     /**
@@ -51,6 +57,14 @@ public class ClockDisplay
         if(minutes.getValue() == 0) {  // it just rolled over!
             hours.increment();
         }
+        if(hours.getValue() == 0 && minutes.getValue() == 0 && amPm =="AM")
+        {
+            amPm = "PM";
+        }
+        else if(hours.getValue() == 0 && minutes.getValue() == 0 && amPm =="PM")
+        {
+            amPm = "AM";
+        } 
         updateDisplay();
     }
 
@@ -58,10 +72,11 @@ public class ClockDisplay
      * Set the time of the display to the specified hour and
      * minute.
      */
-    public void setTime(int hour, int minute)
+    public void setTime(int hour, int minute, String AMorPM)
     {
         hours.setValue(hour);
         minutes.setValue(minute);
+        amPm = AMorPM;
         updateDisplay();
     }
 
@@ -78,7 +93,15 @@ public class ClockDisplay
      */
     private void updateDisplay()
     {
-        displayString = hours.getDisplayValue() + ":" + 
-                        minutes.getDisplayValue();
+        int hour = hours.getValue();
+        if(hour == 0){
+            hour = 12;
+        displayString = 12 + ":" + 
+                        minutes.getDisplayValue() +" " +amPm;
+        }
+        else{
+            displayString = hours.getDisplayValue() + ":" + 
+                        minutes.getDisplayValue() +" " +amPm;
     }
+}
 }
